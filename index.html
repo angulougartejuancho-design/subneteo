@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="NetScope - Professional IPv4 and IPv6 calculator for subnet analysis in the browser.">
+  <title>NetScope - Professional IPv4 & IPv6 Calculator</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <div>
+          <h1>NetScope</h1>
+          <p>Professional IPv4 &amp; IPv6 Calculator</p>
+        </div>
+      </div>
+      <div class="top-actions">
+        <span id="validationBadge" class="status-pill status-ok">Ready</span>
+        <button id="copyReport" class="icon-button" type="button" title="Copy report" aria-label="Copy report">
+          <span aria-hidden="true">CP</span>
+        </button>
+        <button id="resetAll" class="icon-button" type="button" title="Reset" aria-label="Reset">
+          <span aria-hidden="true">RS</span>
+        </button>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <section class="control-panel" aria-label="Calculator controls">
+        <div class="mode-switch" role="tablist" aria-label="IP version">
+          <button id="ipv4Tab" class="mode-button active" type="button" role="tab" aria-selected="true">IPv4</button>
+          <button id="ipv6Tab" class="mode-button" type="button" role="tab" aria-selected="false">IPv6</button>
+        </div>
+
+        <form id="calculatorForm" class="input-stack">
+          <div class="field">
+            <label for="addressInput">Address / CIDR</label>
+            <input id="addressInput" name="addressInput" type="text" autocomplete="off" spellcheck="false" value="192.168.10.34/24">
+          </div>
+
+          <div class="dual-field">
+            <div class="field">
+              <label for="prefixInput">Prefix</label>
+              <input id="prefixInput" name="prefixInput" type="number" min="0" max="32" value="24">
+            </div>
+            <div class="field">
+              <label for="prefixSlider">CIDR</label>
+              <input id="prefixSlider" name="prefixSlider" class="range" type="range" min="0" max="32" value="24">
+            </div>
+          </div>
+
+          <div class="quick-row" aria-label="Examples">
+            <button class="chip active" type="button" data-example="192.168.10.34/24">Office /24</button>
+            <button class="chip" type="button" data-example="10.18.4.77/20">Private /20</button>
+            <button class="chip" type="button" data-example="2001:db8:42:9::21/64">IPv6 /64</button>
+          </div>
+
+          <div class="button-row">
+            <button id="calculateButton" class="primary-button" type="submit">Calculate</button>
+            <button id="copyAddress" class="secondary-button" type="button">Copy Network</button>
+          </div>
+        </form>
+
+        <div class="mini-map" aria-label="Network visual">
+          <div class="mini-map-grid">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <div class="node-map">
+            <div class="node node-core"></div>
+            <div class="node"></div>
+            <div class="node"></div>
+            <div class="node"></div>
+            <div class="link link-a"></div>
+            <div class="link link-b"></div>
+            <div class="link link-c"></div>
+          </div>
+          <div class="map-caption">
+            <strong id="visualNetwork">192.168.10.0/24</strong>
+            <span id="visualScope">Private network</span>
+          </div>
+        </div>
+
+        <section class="history-panel" aria-label="Calculation history">
+          <div class="history-heading">
+            <h2>History</h2>
+            <button id="clearHistory" class="text-button danger-button" type="button">Clear</button>
+          </div>
+          <div id="historyList" class="history-list"></div>
+        </section>
+      </section>
+
+      <section class="results-panel" aria-label="Network results">
+        <div class="section-heading">
+          <div>
+            <h2>Analysis</h2>
+            <p id="analysisSubtitle">IPv4 network profile</p>
+          </div>
+          <span id="addressFamilyTag" class="tag">IPv4</span>
+        </div>
+
+        <div id="summaryGrid" class="summary-grid"></div>
+
+        <div class="split-layout">
+          <section class="data-block" aria-label="Technical details">
+            <div class="block-title">
+              <h3>Technical Details</h3>
+            </div>
+            <div id="detailsTable" class="details-table"></div>
+          </section>
+
+          <section class="data-block" aria-label="Binary and hexadecimal view">
+            <div class="block-title">
+              <h3 id="bitsTitle">Binary View</h3>
+            </div>
+            <div id="bitViewer" class="bit-viewer"></div>
+          </section>
+        </div>
+
+        <section class="data-block planner-block" aria-label="Subnet planner">
+          <div class="block-title planner-title">
+            <div>
+              <h3>Subnet Planner</h3>
+              <span id="plannerMeta">Split into /26 networks</span>
+            </div>
+            <div class="planner-control">
+              <label for="targetPrefix">Target prefix</label>
+              <input id="targetPrefix" type="number" min="0" max="32" value="26">
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Network</th>
+                  <th>First</th>
+                  <th>Last</th>
+                  <th>Capacity</th>
+                </tr>
+              </thead>
+              <tbody id="subnetRows"></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
